@@ -203,9 +203,43 @@ html { scroll-behavior: smooth; }
 .contact-card a:hover { text-decoration: underline; }
 .contact-card:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(255,77,109,0.5); }
 
+/* LIGHTBOX STYLING */
+#lightbox-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  cursor: zoom-out;
+}
+#lightbox-overlay img {
+  max-width: 90%;
+  max-height: 80%;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+.close-lightbox {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  color: white;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+}
 </style>
 </head>
 <body>
+
+<div id="lightbox-overlay" onclick="closeFullscreen()">
+  <span class="close-lightbox" onclick="closeFullscreen()">&times;</span>
+  <img id="fullscreen-img" src="" alt="Fullscreen Image">
+</div>
 
 <div class="leaf">🍓</div>
 <div class="leaf">🍒</div>
@@ -221,7 +255,7 @@ html { scroll-behavior: smooth; }
 
   <div class="screen">
     <div class="status-bar">
-      <span>9:41</span>
+      <span id="live-time">9:41 AM</span>
       <span><i class="fas fa-wifi"></i> <i class="fas fa-battery-three-quarters"></i></span>
     </div>
 
@@ -247,9 +281,9 @@ html { scroll-behavior: smooth; }
     <section id="media">
       <h2>📸 Captured Moments</h2>
       <div class="media-gallery">
-        <div class="media-item"><img src="picture1.jpg" class="zoom-img"><p>E-commerce UI</p></div>
-        <div class="media-item"><img src="picture2.jpg" class="zoom-img"><p>T-shirt Layout</p></div>
-        <div class="media-item"><img src="mango3.jpg.jpg" class="zoom-img"><p>Product Design</p></div>
+        <div class="media-item"><img src="picture1.jpg" class="zoom-img" onclick="openFullscreen(this.src)"><p>E-commerce UI</p></div>
+        <div class="media-item"><img src="picture2.jpg" class="zoom-img" onclick="openFullscreen(this.src)"><p>T-shirt Layout</p></div>
+        <div class="media-item"><img src="mango3.jpg.jpg" class="zoom-img" onclick="openFullscreen(this.src)"><p>Product Design</p></div>
       </div>
 
       <h2>🎥 Video Journal</h2>
@@ -263,10 +297,10 @@ html { scroll-behavior: smooth; }
     <section id="certificates">
       <h2>📜 Certificates</h2>
       <div class="media-gallery">
-        <div class="media-item"><img src="cert1.jpg.heic" class="zoom-img"><p>Cisco Networking</p></div>
-        <div class="media-item"><img src="cert2.jpg.heic" class="zoom-img"><p>Innovative Solutions</p></div>
-        <div class="media-item"><img src="cert3.jpg.heic" class="zoom-img"><p>IT Seminar</p></div>
-        <div class="media-item"><img src="cert4.jpg" class="zoom-img"><p>Cisco Certificate</p></div>
+        <div class="media-item"><img src="cert1.jpg.heic" class="zoom-img" onclick="openFullscreen(this.src)"><p>Cisco Networking</p></div>
+        <div class="media-item"><img src="cert2.jpg.heic" class="zoom-img" onclick="openFullscreen(this.src)"><p>Innovative Solutions</p></div>
+        <div class="media-item"><img src="cert3.jpg.heic" class="zoom-img" onclick="openFullscreen(this.src)"><p>IT Seminar</p></div>
+        <div class="media-item"><img src="cert4.jpg" class="zoom-img" onclick="openFullscreen(this.src)"><p>Cisco Certificate</p></div>
       </div>
     </section>
 
@@ -330,7 +364,7 @@ html { scroll-behavior: smooth; }
     </div>
 
     <footer>
-      <p>© 2026 Shannon Gale Dela Cruz 🍒</p>
+      <p>©  2026 Shannon Gale Dela Cruz 🍒</p>
     </footer>
 
     <div class="bottom-nav">
@@ -345,9 +379,36 @@ html { scroll-behavior: smooth; }
 </div>
 
 <script>
+// Real-time Clock Function (12-Hour Format)
+function updateClock() {
+    const now = new Date();
+    let hours = now.getHours();
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    
+    hours = hours % 12;
+    hours = hours ? hours : 12; // The hour '0' should be '12'
+    
+    document.getElementById('live-time').textContent = `${hours}:${minutes} ${ampm}`;
+}
+setInterval(updateClock, 1000);
+updateClock(); // Initial call
+
 function toggleChat() {
   const window = document.getElementById('chat-window');
   window.style.display = (window.style.display === 'flex' ? 'none' : 'flex');
+}
+
+// Lightbox functions
+function openFullscreen(src) {
+  const overlay = document.getElementById('lightbox-overlay');
+  const img = document.getElementById('fullscreen-img');
+  img.src = src;
+  overlay.style.display = 'flex';
+}
+
+function closeFullscreen() {
+  document.getElementById('lightbox-overlay').style.display = 'none';
 }
 
 function sendChat() {
